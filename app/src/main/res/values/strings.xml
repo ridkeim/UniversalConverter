@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">UniversalConverter</string>
+    <string name="fill_with_decimal_number">fill with decimal number</string>
+    <string name="zero">0</string>
+</resources>
