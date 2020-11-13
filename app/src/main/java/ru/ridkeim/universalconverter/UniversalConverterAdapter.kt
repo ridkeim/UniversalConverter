@@ -38,6 +38,8 @@ class UniversalConverterAdapter(val clickListener: UniversalConverterListener) :
             if(item == lastCheckedItem){
                 binding.listConverterItem.isChecked = true
                 lastCheckedTextView = binding.listConverterItem
+            }else{
+                binding.listConverterItem.isChecked = false
             }
             this.clickListener = clickListener
             binding.listConverterItem.setOnClickListener(this)

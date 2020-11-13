@@ -23,14 +23,16 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:textAlignment="viewEnd"
-            android:hint="@string/fill_with_decimal_number"
+            android:hint="@string/zero"
             android:textAppearance="@style/TextAppearance.AppCompat.Display2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="@string/zero"
+            android:text="@{mainViewModel.metersString}"
             tools:text="42.42"
-            android:importantForAutofill="no" />
+            android:importantForAutofill="no"
+            android:imeOptions="actionDone"
+            />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/listConverter"
