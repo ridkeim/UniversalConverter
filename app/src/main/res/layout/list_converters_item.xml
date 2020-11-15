@@ -5,7 +5,15 @@
         <variable
             name="item"
             type="ru.ridkeim.universalconverter.UniversalConverter" />
+        <variable
+            name="checked"
+            type="Boolean" />
     </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
     <CheckedTextView
         android:id="@+id/listConverterItem"
         android:layout_width="match_parent"
@@ -17,5 +25,17 @@
         android:paddingStart="?android:attr/listPreferredItemPaddingStart"
         android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
         android:text="@{item.title}"
+        android:checked="@{checked}"
         />
+        <TextView
+            android:id="@+id/vhId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="123"/>
+        <TextView
+            android:id="@+id/itemId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="123"/>
+    </LinearLayout>
 </layout>

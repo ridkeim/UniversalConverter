@@ -2,7 +2,9 @@ package ru.ridkeim.universalconverter
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.view.inputmethod.EditorInfoCompat
 import androidx.databinding.DataBindingUtil
@@ -20,18 +22,16 @@ class MainActivity : AppCompatActivity() {
         binding.mainViewModel = mainViewModel
 
         val universalConverterAdapter = UniversalConverterAdapter(UniversalConverterListener {
-            Toast.makeText(this, it.title, Toast.LENGTH_SHORT).show()
+            editTextNumberDecimal.clearFocus()
             mainViewModel.onUniversalConverterClicked(it)
-
         })
 
         binding.listConverter.adapter = universalConverterAdapter
 
         mainViewModel.currentConverter.observe(this) {
             it?.let {
-                universalConverterAdapter.setChecked(it)
-                editTextNumberDecimal.onEditorAction(EditorInfo.IME_ACTION_NEXT)
-
+//                editTextNumberDecimal.clearFocus()
+                mainViewModel.onUpdateTextEdit()
             }
         }
 
@@ -47,19 +47,21 @@ class MainActivity : AppCompatActivity() {
                  mainViewModel.errorToastShown()
              }
         }
-
         binding.editTextNumberDecimal.setOnEditorActionListener { v, actionId, event ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
                     v.clearFocus()
-                    mainViewModel.onTextEditDone(v.text.toString())
-                    true
-                }
-                EditorInfo.IME_ACTION_NEXT -> {
-                    mainViewModel.onUpdateTextEdit()
                     true
                 }
                 else -> false
+            }
+        }
+
+        binding.editTextNumberDecimal.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
+            if (!hasFocus) {
+                val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(v.windowToken, 0)
+                mainViewModel.onTextEditDone(binding.editTextNumberDecimal.text.toString())
             }
         }
         binding.lifecycleOwner = this
