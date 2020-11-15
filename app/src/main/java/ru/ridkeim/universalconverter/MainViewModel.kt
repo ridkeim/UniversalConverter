@@ -33,18 +33,23 @@ class MainViewModel : ViewModel(){
     }
     init {
         val arrayList = ArrayList<UniversalConverter>()
-        val universalConverter = UniversalConverter(1.0, "В метрах")
+        val universalConverter = UniversalConverter(1.0, "В метры")
         _currentConverter.value = universalConverter
-        arrayList.add(universalConverter)
-        arrayList.add(UniversalConverter(3.0,"В котанах"))
-        arrayList.add(UniversalConverter(7.0,"В папугаях"))
-        arrayList.add(UniversalConverter(0.5,"В удавах"))
-        for(i in 1..30){
-            arrayList.add(UniversalConverter( i.toDouble(), "Item #$i"))
+        with(arrayList) {
+            add(universalConverter)
+            add(UniversalConverter(10.0,"В дециметры"))
+            add(UniversalConverter(100.0,"В сантимеры"))
+            add(UniversalConverter(1000.0,"В милиметры"))
+            add(UniversalConverter(39.3701,"В дюймах"))
+            add(UniversalConverter(3.28084,"В футах"))
+            add(UniversalConverter(1.09361,"В ярдах"))
+            add(UniversalConverter(0.000621371,"В милях"))
+            add(UniversalConverter(0.000539957,"В морских милях"))
         }
+
         _converters.value = arrayList
 
-        df.applyPattern("###.##")
+        df.applyPattern("###.######")
         val decimalFormatSymbols = DecimalFormatSymbols()
         decimalFormatSymbols.decimalSeparator = '.'
         df.decimalFormatSymbols = decimalFormatSymbols
