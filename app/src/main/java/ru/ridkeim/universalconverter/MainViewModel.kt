@@ -1,5 +1,6 @@
 package ru.ridkeim.universalconverter
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -10,6 +11,7 @@ import java.text.DecimalFormatSymbols
 
 
 class MainViewModel : ViewModel(){
+    private val TAG = MainViewModel::class.java.canonicalName
     val df = DecimalFormat()
     private val _currentConverter = MutableLiveData<UniversalConverter>()
     val currentConverter : LiveData<UniversalConverter>
@@ -22,29 +24,38 @@ class MainViewModel : ViewModel(){
     val numberFormatException : LiveData<Boolean>
         get() = _numberFormatException
 
-    private val _meters = MutableLiveData<Double>()
+    private val _rawValue = MutableLiveData<Double>()
 
-    val metersString : LiveData<String> = Transformations.map(_meters) {
+    val convertedValue : LiveData<String> = Transformations.map(_rawValue) {
         it?.let {
-            val fromMeters = currentConverter.value?.fromMeters(it)
+            val fromMeters = currentConverter.value?.convertFromRaw(it)
             val format = df.format(fromMeters)
             format
         }
     }
     init {
         val arrayList = ArrayList<UniversalConverter>()
-        val universalConverter = UniversalConverter(1.0, "В метры")
+        val universalConverter = UniversalConverter(1.0, "В милиметры")
         _currentConverter.value = universalConverter
         with(arrayList) {
             add(universalConverter)
-            add(UniversalConverter(10.0,"В дециметры"))
-            add(UniversalConverter(100.0,"В сантимеры"))
-            add(UniversalConverter(1000.0,"В милиметры"))
-            add(UniversalConverter(39.3701,"В дюймах"))
-            add(UniversalConverter(3.28084,"В футах"))
-            add(UniversalConverter(1.09361,"В ярдах"))
-            add(UniversalConverter(0.000621371,"В милях"))
-            add(UniversalConverter(0.000539957,"В морских милях"))
+            add(UniversalConverter(10.0,"В сантимеры"))
+            add(UniversalConverter(100.0,"В дециметры"))
+            add(UniversalConverter(1000.0,"В метры"))
+            add(UniversalConverter(10000.0,"В километры"))
+            add(UniversalConverter(25.4,"В дюймах"))
+            add(UniversalConverter(304.8,"В футах"))
+            add(UniversalConverter(914.4,"В ярдах"))
+            add(UniversalConverter(1609344.0,"В милях"))
+            add(UniversalConverter(1852000.0,"В морских милях"))
+            add(UniversalConverter(711.2,"В аршинах"))
+            add(UniversalConverter(2133.6,"В саженях"))
+            add(UniversalConverter(1066800.0,"В верстах"))
+            add(UniversalConverter(44.45,"В вершках"))
+            add(UniversalConverter(177.8,"В пядях"))
+            for (i in 30..50){
+                add(UniversalConverter(i.toDouble(),"Item $i"))
+            }
         }
 
         _converters.value = arrayList
@@ -57,29 +68,44 @@ class MainViewModel : ViewModel(){
     }
 
     fun onUniversalConverterClicked(item : UniversalConverter){
-        _currentConverter.postValue(item)
+        if(_currentConverter.value != item){
+            _currentConverter.value = item
+        }
+        Log.d(TAG,"onUniversalConverterClicked")
     }
 
     fun onTextEditDone(s : String){
+        if (s.isEmpty()) return
         val res : Double = try {
-            s.replace(',','.').toDouble()
+            s.toDouble()
         } catch (e : NumberFormatException){
-            _numberFormatException.postValue(true)
+            _numberFormatException.value = true
             0.0
         }
-        _meters.postValue(currentConverter.value?.toMeters(res))
+        val raw = currentConverter.value?.convertToRaw(res)
+        if(_rawValue.value != raw){
+            _rawValue.value = raw
+            Log.d(TAG,"onTextEditDone")
+        }else{
+            Log.d(TAG,"onTextEditDone nothing has changed")
+        }
     }
 
     fun onUpdateTextEdit() {
-        _meters.postValue(_meters.value)
+        _rawValue.value = _rawValue.value
+        Log.d(TAG,"onUpdateText")
     }
 
     fun errorToastShown(){
-        _numberFormatException.postValue(false)
+        _numberFormatException.value = false
     }
 
 
+    override fun onCleared() {
+        Log.d(TAG,"onCleared")
+        super.onCleared()
 
+    }
 
 
 }
