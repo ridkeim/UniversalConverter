@@ -19,8 +19,6 @@ class UniversalConverterAdapter(private val clickListener: UniversalConverterLis
         holder.bind(getItem(position)!!,clickListener)
     }
 
-
-
     class ViewHolder private constructor(private val binding : ListConvertersItemBinding) : RecyclerView.ViewHolder(binding.root), View.OnClickListener{
 
         private lateinit var clickListener : UniversalConverterListener
@@ -31,47 +29,27 @@ class UniversalConverterAdapter(private val clickListener: UniversalConverterLis
                 lastViewHolder = this
             }
             binding.item = item
-            binding.vhId.text = this.toString()
-            binding.itemId.text = binding.listConverterItem.toString()
             binding.checked = condition
             binding.listConverterItem.setOnClickListener(this)
-            applyColors()
             this.clickListener = clickListener
             binding.executePendingBindings()
         }
 
-        private fun applyColors() {
-            val color = if (this == lastViewHolder) {
-                binding.listConverterItem.resources.getColor(R.color.teal_200)
-            } else {
-                binding.listConverterItem.resources.getColor(R.color.white)
-            }
-            binding.itemId.setTextColor(color)
-            binding.vhId.setTextColor(color)
-        }
-
-        private fun resetColors() {
-            lastViewHolder?.apply {
-                val color = binding.itemId.resources.getColor(R.color.white)
-                binding.vhId.setTextColor(color)
-                binding.itemId.setTextColor(color)
-            }
-        }
-
         override fun onClick(v: View?) {
-            resetColors()
-            lastViewHolder?.inverseCheckedField()
-            updateLastPosition()
-            this.inverseCheckedField()
-            applyColors()
+            if(lastCheckedPosition != adapterPosition){
+                if(lastViewHolder != this){
+                    lastViewHolder?.setCheckedField(false)
+                }
+                this.setCheckedField(true)
+                updateLastPosition()
+            }
             binding.item?.let {
                 clickListener.onClick(it)
             }
         }
 
-
-        private fun inverseCheckedField(){
-            binding.checked = binding.checked?.not()
+        private fun setCheckedField(value : Boolean){
+            binding.checked = value
         }
 
         private fun updateLastPosition(){
@@ -89,6 +67,8 @@ class UniversalConverterAdapter(private val clickListener: UniversalConverterLis
                 return ViewHolder(binding)
             }
         }
+
+
     }
 
     class UniversalConverterDifUtilCallback : DiffUtil.ItemCallback<UniversalConverter>(){
