@@ -3,17 +3,13 @@ package ru.ridkeim.universalconverter
 import android.graphics.Rect
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.core.view.inputmethod.EditorInfoCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.selection.SelectionTracker
 import com.ridkeim.universalconverter.R
 import com.ridkeim.universalconverter.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
@@ -24,7 +20,6 @@ class MainActivity : AppCompatActivity() {
         val binding : ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         val mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         binding.mainViewModel = mainViewModel
-
         val universalConverterAdapter = UniversalConverterAdapter(UniversalConverterListener {
             mainViewModel.onUniversalConverterClicked(it)
         })
@@ -45,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
         mainViewModel.numberFormatException.observe(this){
              if(true == it){
-                 Toast.makeText(this, "Неверно введено число", Toast.LENGTH_SHORT).show()
+                 Toast.makeText(this, getString(R.string.wrong_number), Toast.LENGTH_SHORT).show()
                  mainViewModel.errorToastShown()
              }
         }
