@@ -53,9 +53,6 @@ class MainViewModel : ViewModel(){
             add(UniversalConverter(1066800.0,"В верстах"))
             add(UniversalConverter(44.45,"В вершках"))
             add(UniversalConverter(177.8,"В пядях"))
-            for (i in 30..50){
-                add(UniversalConverter(i.toDouble(),"Item $i"))
-            }
         }
 
         _converters.value = arrayList
@@ -100,12 +97,9 @@ class MainViewModel : ViewModel(){
         _numberFormatException.value = false
     }
 
-
     override fun onCleared() {
         Log.d(TAG,"onCleared")
         super.onCleared()
-
     }
-
 
 }
