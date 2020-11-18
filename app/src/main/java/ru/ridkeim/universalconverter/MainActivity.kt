@@ -7,7 +7,9 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
+import android.widget.*
+import android.widget.AbsListView.MultiChoiceModeListener
+import android.widget.AdapterView.OnItemSelectedListener
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.ridkeim.universalconverter.R
@@ -20,11 +22,14 @@ class MainActivity : AppCompatActivity() {
         val binding : ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         val mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         binding.mainViewModel = mainViewModel
-        val universalConverterAdapter = UniversalConverterAdapter(UniversalConverterListener {
-            mainViewModel.onUniversalConverterClicked(it)
-        })
+        val universalConverterAdapter = UniversalConverterAdapter()
 
         binding.listConverter.adapter = universalConverterAdapter
+
+        listConverter.setOnItemClickListener { parent, view, position, id ->
+            val item = universalConverterAdapter.getItem(position)
+            mainViewModel.onUniversalConverterClicked(item)
+        }
 
         mainViewModel.currentConverter.observe(this) {
             it?.let {

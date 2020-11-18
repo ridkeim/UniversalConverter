@@ -34,7 +34,7 @@
             android:imeOptions="actionDone"
             />
 
-        <androidx.recyclerview.widget.RecyclerView
+        <ListView
             android:id="@+id/listConverter"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -44,6 +44,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layoutManager="LinearLayoutManager"
             tools:listitem="@layout/list_converters_item"
+            android:choiceMode="singleChoice"
             />
 
 
