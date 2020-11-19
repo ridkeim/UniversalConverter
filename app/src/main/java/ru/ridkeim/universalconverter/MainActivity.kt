@@ -7,12 +7,14 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.AdapterView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.ridkeim.universalconverter.R
 import com.ridkeim.universalconverter.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.list_converters_item.view.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,11 +22,11 @@ class MainActivity : AppCompatActivity() {
         val binding : ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         val mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         binding.mainViewModel = mainViewModel
-        val universalConverterAdapter = UniversalConverterAdapter(UniversalConverterListener {
-            mainViewModel.onUniversalConverterClicked(it)
-        })
-
+        val universalConverterAdapter = UniversalConverterAdapter()
         binding.listConverter.adapter = universalConverterAdapter
+        binding.listConverter.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+            mainViewModel.onUniversalConverterClicked(universalConverterAdapter.getItem(position))
+        }
 
         mainViewModel.currentConverter.observe(this) {
             it?.let {
@@ -37,6 +39,7 @@ class MainActivity : AppCompatActivity() {
                 universalConverterAdapter.submitList(it)
             }
         }
+        android.R.layout.simple_list_item_single_choice
 
         mainViewModel.numberFormatException.observe(this){
              if(true == it){

@@ -3,86 +3,40 @@ package ru.ridkeim.universalconverter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
+import android.widget.BaseAdapter
 import com.ridkeim.universalconverter.R
-import com.ridkeim.universalconverter.databinding.ListConvertersItemBinding
+import kotlinx.android.synthetic.main.list_converters_item.view.*
 
-class UniversalConverterAdapter(private val clickListener: UniversalConverterListener) : ListAdapter<UniversalConverter, UniversalConverterAdapter.ViewHolder>(UniversalConverterDifUtilCallback()){
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder.from(parent)
+class UniversalConverterAdapter : BaseAdapter(){
+    private var data = listOf<UniversalConverter>()
+    override fun getCount(): Int {
+        return data.size
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position)!!,clickListener)
+    override fun getItem(position: Int): UniversalConverter {
+        return data[position]
     }
 
-    class ViewHolder private constructor(private val binding : ListConvertersItemBinding) : RecyclerView.ViewHolder(binding.root), View.OnClickListener{
-
-        private lateinit var clickListener : UniversalConverterListener
-
-        fun bind(item: UniversalConverter, clickListener: UniversalConverterListener){
-            val condition = lastCheckedPosition == adapterPosition
-            if(condition){
-                lastViewHolder = this
-            }
-            binding.item = item
-            binding.checked = condition
-            binding.listConverterItem.setOnClickListener(this)
-            this.clickListener = clickListener
-            binding.executePendingBindings()
-        }
-
-        override fun onClick(v: View?) {
-            if(lastCheckedPosition != adapterPosition){
-                if(lastViewHolder != this){
-                    lastViewHolder?.setCheckedField(false)
-                }
-                this.setCheckedField(true)
-                updateLastPosition()
-            }
-            binding.item?.let {
-                clickListener.onClick(it)
-            }
-        }
-
-        private fun setCheckedField(value : Boolean){
-            binding.checked = value
-        }
-
-        private fun updateLastPosition(){
-            lastViewHolder = this
-            lastCheckedPosition = adapterPosition
-        }
-
-        companion object {
-            var lastViewHolder : ViewHolder? = null
-            var lastCheckedPosition = 0
-
-            fun from(parent: ViewGroup): ViewHolder {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ListConvertersItemBinding.inflate(layoutInflater,parent,false)
-                return ViewHolder(binding)
-            }
-        }
-
-
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
     }
 
-    class UniversalConverterDifUtilCallback : DiffUtil.ItemCallback<UniversalConverter>(){
-        override fun areItemsTheSame(oldItem: UniversalConverter, newItem: UniversalConverter): Boolean {
-            return oldItem == newItem
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        val item = getItem(position)
+        val view = if(convertView == null){
+            val inflater = LayoutInflater.from(parent?.context)
+            inflater.inflate(R.layout.list_converters_item,parent,false)
+        } else {
+            convertView
         }
-
-        override fun areContentsTheSame(oldItem: UniversalConverter, newItem: UniversalConverter): Boolean {
-            return oldItem == newItem
-        }
-
+        view.listConverterItem.text = item.title
+        return view
     }
-}
 
-class UniversalConverterListener (private val clickListener : (UniversalConverter) -> Unit){
-    fun onClick(item : UniversalConverter) = clickListener(item)
+    fun submitList(list: List<UniversalConverter>) {
+        data = list
+        notifyDataSetChanged()
+    }
+
+
 }

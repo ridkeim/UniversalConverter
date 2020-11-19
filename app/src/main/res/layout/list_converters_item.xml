@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp">
-    <data>
-        <variable
-            name="item"
-            type="ru.ridkeim.universalconverter.UniversalConverter" />
-        <variable
-            name="checked"
-            type="Boolean" />
-    </data>
-    <RadioButton
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true">
+    <CheckedTextView
         android:id="@+id/listConverterItem"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@{item.title}"
-        android:checked="@{checked}"
+        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:gravity="center_vertical"
+        android:checkMark="?android:attr/listChoiceBackgroundIndicator"
+        android:checkMarkTintMode="src_atop"
         android:paddingStart="?android:attr/listPreferredItemPaddingStart"
         android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
-        tools:text="В метрах"/>
-</layout>
+        android:stateListAnimator="@drawable/background_item_selector"
+
+        tools:text="@string/tools_textView"/>
+</LinearLayout>

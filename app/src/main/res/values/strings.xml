@@ -2,4 +2,5 @@
     <string name="app_name">UniversalConverter</string>
     <string name="zero">0.0</string>
     <string name="wrong_number">Неверно введено число</string>
+    <string name="tools_textView">В метрах</string>
 </resources>
